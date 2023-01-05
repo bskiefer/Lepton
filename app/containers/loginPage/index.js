@@ -1,3 +1,4 @@
+import { bindActionCreators } from 'redux'
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import Avatar from 'boring-avatars'
 import { connect } from 'react-redux'
@@ -9,6 +10,10 @@ import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jp
 import saritocatImage from '../../utilities/octodex/saritocat.png'
 
 import './index.scss'
+
+import {
+  updateUserAccount
+} from '../../actions/index'
 
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
@@ -72,29 +77,22 @@ class LoginPage extends Component {
   }
 
   renderControlSection () {
-    const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
+    const { authWindowStatus, loggedInUserInfo, userSessionStatus, userAccount } = this.props
     const { loginMode } = this.state
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
-    const welcomeMessage = 'Lepton is FREE. Like us on GitHub! ⭐'
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
         <div className='button-group-modal'>
           <ProgressBar active now={ 100 }/>
-          <div className="login-page-text-link">
-            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
-          </div>
         </div>
       )
     }
 
-    if (conf.get('enterprise:enable')) {
-      const token = conf.get('enterprise:token')
+    if (userAccount.enterprise) {
+      const token = userAccount.token
       return (
         <div className='button-group-modal'>
-          <div className="login-page-text-link">
-            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
-          </div>
           { token
             ? <Button
               autoFocus
@@ -112,9 +110,6 @@ class LoginPage extends Component {
       loggedInUserName === null || loggedInUserName === 'null') {
       return (
         <div className='button-group-modal'>
-          <div className="login-page-text-link">
-            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
-          </div>
           { loginMode === LoginModeEnum.CREDENTIALS
             ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus)
             : this.renderTokenLoginSection(true, userSessionStatus)
@@ -132,22 +127,40 @@ class LoginPage extends Component {
     })
   }
 
-  renderCredentialLoginSection (authWindowStatus, userSessionStatus) {
+  handleLoginAuthWindow(account) {
+    const { updateUserAccount } = this.props
+
+    updateUserAccount({
+      "name": account,
+      "host": conf.get(`accounts:${account}:host`),
+      "enterprise": conf.get(`accounts:${account}:enterprise`),
+      "token": conf.get(`accounts:${account}:token`)
+    })
+
+    console.log(this.props.userAccount)
+
+    this.setState({
+      inputTokenValue: conf.get(`accounts:${account}:token`)
+    })
+    this.props.initUserSession(conf.get(`accounts:${account}:token`))
+  }
+
+  renderCredentialLoginSection(authWindowStatus, userSessionStatus) {
+    
+    const accounts = conf.get('accounts');
+    const loginAuthWindow = this.handleLoginAuthWindow.bind(this);
+
     return (
       <div>
-        { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
-          : null
-        }
-        <Button
-          autoFocus
-          className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
-          onClick={ this.handleLoginClicked.bind(this) }>
-            GitHub Login
-        </Button>
-        <div className="login-page-text-link">
-          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to token?</a>
-        </div>
+        {Object.keys(accounts).map((i, index) => {
+          return <div key={index}>
+            <Button
+              className='modal-button'
+              onClick={() => loginAuthWindow(i)}>
+              {i}
+              </Button>
+            </div>
+        })}
       </div>
     )
   }
@@ -191,9 +204,10 @@ class LoginPage extends Component {
 
   renderAvatar () {
     const { loginMode } = this.state
+    const { userAccount } = this.props
 
     if (conf.get('avatar:type') === 'boring') {
-      return <a href="https://github.com/hackjutsu/Lepton">
+      return <a href="#">
         <Avatar
           size={ 200 }
           name={ Math.random().toString(36).substr(2, 5) }
@@ -204,7 +218,7 @@ class LoginPage extends Component {
       </a>
     } else {
       let profileImage = dojocatImage
-      if (conf.get('enterprise:enable')) {
+      if (userAccount.enterprise) {
         profileImage = conf.get('enterprise:avatarUrl')
           ? conf.get('enterprise:avatarUrl')
           : privateinvestocatImage
@@ -212,7 +226,7 @@ class LoginPage extends Component {
         profileImage = saritocatImage
       }
 
-      return <a href="https://github.com/hackjutsu/Lepton">
+      return <a href="#">
         <Image className='profile-image-modal' src={ profileImage } rounded/>
       </a>
     }
@@ -237,8 +251,15 @@ class LoginPage extends Component {
 function mapStateToProps (state) {
   return {
     authWindowStatus: state.authWindowStatus,
-    userSessionStatus: state.userSession.activeStatus
+    userSessionStatus: state.userSession.activeStatus,
+    userAccount: state.userAccount,
   }
 }
 
-export default connect(mapStateToProps)(LoginPage)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    updateUserAccount: updateUserAccount
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)

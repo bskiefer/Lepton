@@ -19,8 +19,8 @@ if (conf) {
     proxyAgent = new ProxyAgent(proxyUri)
     logger.info('[.leptonrc] Use proxy', proxyUri)
   }
-  if (conf.get('enterprise:enable')) {
-    const gitHubHost = conf.get('enterprise:host')
+  if (conf.get('account:enterprise')) {
+    const gitHubHost = conf.get('account:host')
     gitHubHostApi = `${gitHubHost}/api/v3`
   }
 }
@@ -41,7 +41,7 @@ function exchangeAccessToken (clientId, clientSecret, authCode) {
   })
 }
 
-function getUserProfile (token) {
+function getUserProfile(token) {
   logger.debug(TAG + 'Getting user profile with token ' + token)
   const USER_PROFILE_URI = `https://${gitHubHostApi}/user`
   return ReqPromise({
@@ -259,7 +259,16 @@ export const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
 export const EDIT_SINGLE_GIST = 'EDIT_SINGLE_GIST'
 export const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
 
-export function getGitHubApi (selection) {
+export function getGitHubApi(selection) {
+  if (conf) {
+    if (conf.get('account:enterprise')) {
+      const gitHubHost = conf.get('account:host')
+      gitHubHostApi = `${gitHubHost}/api/v3`
+    } else {
+      gitHubHostApi = 'api.github.com'
+    }
+  }
+
   switch (selection) {
     case EXCHANGE_ACCESS_TOKEN:
       return exchangeAccessToken

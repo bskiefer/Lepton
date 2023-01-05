@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { default as GistEditorForm, NEW_GIST } from '../gistEditorForm'
-import { Image, Modal, Button, ProgressBar } from 'react-bootstrap'
+import { Image, Modal, Button, ProgressBar, DropdownButton, MenuItem, ButtonToolbar } from 'react-bootstrap'
 import { remote, ipcRenderer } from 'electron'
 import HumanReadableTime from 'human-readable-time'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
@@ -20,6 +20,7 @@ import {
   updateGistTags,
   updateLogoutModalStatus,
   updateSingleGist,
+  updateUserAccount
 } from '../../actions/index'
 import {
   CREATE_SINGLE_GIST,
@@ -38,10 +39,10 @@ const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
 let defaultImage = dojocatImage
-if (conf.get('enterprise:enable')) {
+if (conf.get('account:enterprise')) {
   defaultImage = privateinvestocatImage
-  if (conf.get('enterprise:avatarUrl')) {
-    defaultImage = conf.get('enterprise:avatarUrl')
+  if (conf.get('account:avatarUrl')) {
+    defaultImage = conf.get('account:avatarUrl')
   }
 }
 
@@ -203,10 +204,46 @@ class UserPanel extends Component {
     )
   }
 
-  renderInSection () {
+  handleLoginAuthWindow(account) {
+    const { updateUserAccount } = this.props
+
+    updateUserAccount({
+      "name": account,
+      "enterprise": conf.get(`accounts:${account}:enterprise`),
+      "host": conf.get(`accounts:${account}:host`),
+      "token": conf.get(`accounts:${account}:token`)
+    })
+
+    this.props.initUserSession(conf.get(`accounts:${account}:token`))
+  }
+
+  renderInSection() {
+    let title = conf.get('account:name')
+    const loginAuthWindow = this.handleLoginAuthWindow.bind(this);
+    const accounts = conf.get('accounts');
+    
     return (
       <div>
-        { this.renderGistEditorModal() }
+        {this.renderGistEditorModal()}
+        <ButtonToolbar className='accountDropdown'>
+          <DropdownButton
+            bsStyle={'default'}
+            title={title}
+            key={0}
+            id={`dropdown-basic-0`}
+          >
+            {Object.keys(accounts).map((i, index) => {
+              return <MenuItem
+                eventKey={index+1} 
+                key={index+1} 
+                onClick={() => loginAuthWindow(i)}>
+                {i}
+              </MenuItem>
+            })}
+          </DropdownButton>
+        </ButtonToolbar>
+        
+        <hr/>
         <a href='#'
           className='user-panel-button'
           onClick={ this.handleLogoutClicked.bind(this) }>
@@ -278,7 +315,7 @@ class UserPanel extends Component {
     }
 
     let avatarUrl = profile.avatar_url
-    if (conf.get('enterprise:enable')) {
+    if (conf.get('account:enterprise')) {
       avatarUrl = defaultImage
     }
 
@@ -342,7 +379,8 @@ function mapStateToProps (state) {
     gistTags: state.gistTags,
     gistSyncStatus: state.gistSyncStatus,
     logoutModalStatus: state.logoutModalStatus,
-    gistNewModalStatus: state.gistNewModalStatus
+    gistNewModalStatus: state.gistNewModalStatus,
+    userAccount: state.userAccount,
   }
 }
 
@@ -354,7 +392,8 @@ function mapDispatchToProps (dispatch) {
     selectGistTag: selectGistTag,
     selectGist: selectGist,
     updateGistNewModeStatus: updateGistNewModeStatus,
-    updateLogoutModalStatus: updateLogoutModalStatus
+    updateLogoutModalStatus: updateLogoutModalStatus,
+    updateUserAccount: updateUserAccount
   }, dispatch)
 }
 

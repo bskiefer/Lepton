@@ -24,6 +24,7 @@ import searchWindowStatus from './reducer_search_window_status'
 import syncTime from './reducer_sync_time'
 import updateAvailableBarStatus from './reducer_update_available_bar_status'
 import userSession from './reducer_user_session'
+import userAccount from './reducer_user_account'
 
 const rootReducer = combineReducers({
   aboutModalStatus,
@@ -51,6 +52,7 @@ const rootReducer = combineReducers({
   syncTime,
   updateAvailableBarStatus,
   userSession,
+  userAccount,
 })
 
 export default rootReducer

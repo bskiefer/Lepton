@@ -311,7 +311,8 @@ class NavigationPanel extends Component {
       updateLocalStorage,
       getLoggedInUserInfo,
       reSyncUserGists,
-      launchAuthWindow
+      launchAuthWindow,
+      initUserSession
     } = this.props
 
     return (
@@ -322,7 +323,7 @@ class NavigationPanel extends Component {
           updateLocalStorage = { updateLocalStorage }
           getLoggedInUserInfo = { getLoggedInUserInfo }
           reSyncUserGists = { reSyncUserGists }
-          launchAuthWindow = { launchAuthWindow }
+          initUserSession = { initUserSession }
         />
         <hr/>
         { this.renderTagSection() }

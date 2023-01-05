@@ -226,3 +226,15 @@ figure.sticker-img.hover .curl {
   -webkit-transition-delay: 0s;
   transition-delay: 0s;
 }
+
+.accountDropdown .dropdown {
+	width: 100%;
+  margin: 0 2.5px;
+  > button {
+    width: 100% !important;
+    border-right: 0;
+    border-left: 0;
+    border-top: 0;
+    border-radius: 2px;
+  }
+}

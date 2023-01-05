@@ -46,5 +46,6 @@ module.exports = {
         "keyDashboard": "CommandOrControl+D",
         "keyEditorExit": "CommandOrControl+Escape",
         "keySyncGists": "CommandOrControl+R"
-    }
+    },
+    "accounts": {}
 }

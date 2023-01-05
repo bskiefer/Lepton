@@ -703,6 +703,7 @@ ReactDom.render(
       updateLocalStorage = { updateLocalStorage }
       loggedInUserInfo = { getCachedUserInfo() }
       launchAuthWindow = { launchAuthWindow }
+      initUserSession = { initUserSession }
       reSyncUserGists = { reSyncUserGists }
       updateAboutModalStatus = { updateAboutModalStatus }
       updateDashboardModalStatus = { updateDashboardModalStatus }

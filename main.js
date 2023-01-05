@@ -12,6 +12,10 @@ const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
 let willQuitApp = false
 
+try {
+	require('electron-reloader')(module);
+} catch {}
+
 // http://electron.rocks/sharing-between-main-and-renderer-process/
 // Set up the logger
 const logger = require('winston')

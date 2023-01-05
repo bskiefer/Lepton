@@ -96,7 +96,10 @@ class AppContainer extends Component {
       updateActiveGistAfterClicked,
       reSyncUserGists,
       localPref,
-      searchIndex
+      searchIndex,
+      loggedInUserInfo,
+      launchAuthWindow,
+      initUserSession
     } = this.props
 
     return (
@@ -110,7 +113,9 @@ class AppContainer extends Component {
           searchIndex = { searchIndex }
           updateLocalStorage = { updateLocalStorage }
           updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
-          reSyncUserGists = { reSyncUserGists } />
+          reSyncUserGists = {reSyncUserGists}
+          initUserSession = { initUserSession }
+          />
         <SplitPane split='vertical' minSize={180} maxSize={300} defaultSize={230}>
           <NavigationPanelDetails />
           <SnippetPanel
@@ -142,11 +147,12 @@ class AppContainer extends Component {
   }
 
   renderInactiveSection () {
-    const { loggedInUserInfo, launchAuthWindow } = this.props
+    const { loggedInUserInfo, launchAuthWindow, initUserSession } = this.props
     return (
       <LoginPage
         loggedInUserInfo = { loggedInUserInfo }
-        launchAuthWindow = { launchAuthWindow } />
+        launchAuthWindow = { launchAuthWindow }
+        initUserSession = { initUserSession } />
     )
   }
 
