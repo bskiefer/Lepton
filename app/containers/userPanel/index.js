@@ -218,7 +218,7 @@ class UserPanel extends Component {
   }
 
   renderInSection() {
-    let title = conf.get('account:name')
+    let title = this.props.userAccount.name
     const loginAuthWindow = this.handleLoginAuthWindow.bind(this);
     const accounts = conf.get('accounts');
     

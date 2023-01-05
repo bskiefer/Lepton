@@ -103,6 +103,14 @@
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/dom-helpers/node_modules/@babel/runtime",
     "licenseFile": "node_modules/dom-helpers/node_modules/@babel/runtime/LICENSE"
   },
+  "@babel/runtime@7.20.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "publisher": "The Babel Team",
+    "url": "https://babel.dev/team",
+    "path": "/Users/brandonkiefer/projects/Lepton/node_modules/uncontrollable/node_modules/@babel/runtime",
+    "licenseFile": "node_modules/uncontrollable/node_modules/@babel/runtime/LICENSE"
+  },
   "@babel/template@7.10.1": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel",
@@ -195,6 +203,24 @@
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/electron/node_modules/@types/node",
     "licenseFile": "node_modules/electron/node_modules/@types/node/LICENSE"
+  },
+  "@types/prop-types@15.7.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/brandonkiefer/projects/Lepton/node_modules/@types/prop-types",
+    "licenseFile": "node_modules/@types/prop-types/LICENSE"
+  },
+  "@types/react@18.0.26": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/brandonkiefer/projects/Lepton/node_modules/@types/react",
+    "licenseFile": "node_modules/@types/react/LICENSE"
+  },
+  "@types/scheduler@0.16.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/brandonkiefer/projects/Lepton/node_modules/@types/scheduler",
+    "licenseFile": "node_modules/@types/scheduler/LICENSE"
   },
   "@types/semver@7.2.0": {
     "licenses": "MIT",
@@ -780,6 +806,14 @@
     "repository": "https://github.com/jsdom/cssstyle",
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/cssstyle",
     "licenseFile": "node_modules/cssstyle/LICENSE"
+  },
+  "csstype@3.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/frenic/csstype",
+    "publisher": "Fredrik Nicol",
+    "email": "fredrik.nicol@gmail.com",
+    "path": "/Users/brandonkiefer/projects/Lepton/node_modules/csstype",
+    "licenseFile": "node_modules/csstype/LICENSE"
   },
   "cycle@1.0.3": {
     "licenses": "Custom: https://github.com/douglascrockford/JSON-js",
@@ -2675,7 +2709,7 @@
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/raw-body",
     "licenseFile": "node_modules/raw-body/LICENSE"
   },
-  "react-bootstrap@0.32.4": {
+  "react-bootstrap@0.33.1": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/react-bootstrap",
     "publisher": "Stephen J. Collings",
@@ -2715,7 +2749,7 @@
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/react-lifecycles-compat",
     "licenseFile": "node_modules/react-lifecycles-compat/LICENSE.md"
   },
-  "react-overlays@0.8.3": {
+  "react-overlays@0.9.3": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/react-overlays",
     "publisher": "Jason Quense",
@@ -2805,6 +2839,14 @@
     "repository": "https://github.com/reduxjs/redux",
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/redux",
     "licenseFile": "node_modules/redux/LICENSE.md"
+  },
+  "regenerator-runtime@0.13.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/regenerator/tree/main/packages/runtime",
+    "publisher": "Ben Newman",
+    "email": "bn@cs.stanford.edu",
+    "path": "/Users/brandonkiefer/projects/Lepton/node_modules/uncontrollable/node_modules/regenerator-runtime",
+    "licenseFile": "node_modules/uncontrollable/node_modules/regenerator-runtime/LICENSE"
   },
   "regenerator-runtime@0.13.5": {
     "licenses": "MIT",
@@ -3446,13 +3488,13 @@
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/uc.micro",
     "licenseFile": "node_modules/uc.micro/LICENSE.txt"
   },
-  "uncontrollable@5.1.0": {
+  "uncontrollable@7.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jquense/uncontrollable",
     "publisher": "Jason Quense",
     "email": "monastic.panic@gmail.com",
     "path": "/Users/brandonkiefer/projects/Lepton/node_modules/uncontrollable",
-    "licenseFile": "node_modules/uncontrollable/README.md"
+    "licenseFile": "node_modules/uncontrollable/LICENSE"
   },
   "universalify@0.1.2": {
     "licenses": "MIT",
