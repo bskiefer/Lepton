@@ -42,13 +42,17 @@ import {
   updateImmersiveModeStatus,
   updateAboutModalStatus,
   updateDashboardModalStatus,
-  updatePinnedTags
+  updatePinnedTags,
+  updateUserAccount
 } from './actions/index'
 
 import { notifySuccess, notifyFailure } from './utilities/notifier'
 
 const remote = require('@electron/remote')
+const keytar = require('keytar')
 const logger = remote.getGlobal('logger')
+const conf = remote.getGlobal('conf')
+const store = remote.getGlobal('store')
 
 let Account = null
 try {
@@ -74,6 +78,21 @@ const CONFIG_OPTIONS = {
 let preSyncSnapshot = {
   activeGistTag: null,
   activeGist: null
+}
+
+function setActiveAccount(account) {
+  const accnt = store.get(`accounts.${account}`);
+
+  keytar.getPassword(`Lepton`, account).then(token => {
+    console.log('LOGGING IN')
+    reduxStore.dispatch(updateUserAccount({
+        "name": accnt.name,
+        "host": accnt.host,
+        "enterprise": accnt.enterprise,
+        "token": token
+    }))
+    initUserSession(token)
+  })
 }
 
 function launchAuthWindow (token) {
@@ -703,6 +722,7 @@ ReactDom.render(
       updateLocalStorage = { updateLocalStorage }
       loggedInUserInfo = { getCachedUserInfo() }
       launchAuthWindow = { launchAuthWindow }
+      setActiveAccount = { setActiveAccount }
       initUserSession = { initUserSession }
       reSyncUserGists = { reSyncUserGists }
       updateAboutModalStatus = { updateAboutModalStatus }

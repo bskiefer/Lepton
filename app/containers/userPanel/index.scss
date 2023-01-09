@@ -236,5 +236,20 @@ figure.sticker-img.hover .curl {
     border-left: 0;
     border-top: 0;
     border-radius: 2px;
+    &:hover, &:active, &:focus {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-secondary) !important;
+    }
+  }
+  .dropdown-menu {
+    background-color: var(--bg-secondary) !important;
+    > li > a {
+      color: var(--text-primary) !important;
+      &:hover, &:active, &:focus {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-secondary) !important;
+      }
+    }
+
   }
 }

@@ -35,6 +35,7 @@ import newIcon from './new.svg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 import syncIcon from './sync.svg'
 
+const store = remote.getGlobal('store')
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
@@ -204,23 +205,12 @@ class UserPanel extends Component {
     )
   }
 
-  handleLoginAuthWindow(account) {
-    const { updateUserAccount } = this.props
-
-    updateUserAccount({
-      "name": account,
-      "enterprise": conf.get(`accounts:${account}:enterprise`),
-      "host": conf.get(`accounts:${account}:host`),
-      "token": conf.get(`accounts:${account}:token`)
-    })
-
-    this.props.initUserSession(conf.get(`accounts:${account}:token`))
-  }
-
   renderInSection() {
+    if (!this.props.userAccount.name) {
+      return this.props.showMainScreen()
+    }
     let title = this.props.userAccount.name
-    const loginAuthWindow = this.handleLoginAuthWindow.bind(this);
-    const accounts = conf.get('accounts');
+    const accounts = store.get('accounts');
     
     return (
       <div>
@@ -235,8 +225,9 @@ class UserPanel extends Component {
             {Object.keys(accounts).map((i, index) => {
               return <MenuItem
                 eventKey={index+1} 
-                key={index+1} 
-                onClick={() => loginAuthWindow(i)}>
+                key={index + 1} 
+                disabled={title == i}
+                onClick={() => title != i ? this.props.setActiveAccount(i) : false}>
                 {i}
               </MenuItem>
             })}

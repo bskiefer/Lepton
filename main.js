@@ -1,9 +1,11 @@
-require('@electron/remote/main').initialize()
+const remoteMain = require("@electron/remote/main")
+remoteMain.initialize()
 const os = require('os')
 const electron = require('electron')
 const nconf = require('nconf')
 const windowStateKeeper = require('electron-window-state')
 const electronLocalshortcut = require('electron-localshortcut')
+const Store = require('electron-store');
 const Menu = electron.Menu
 const app = electron.app
 const dialog = electron.dialog
@@ -31,6 +33,7 @@ autoUpdater.autoDownload = nconf.get('autoUpdate')
 
 initGlobalConfigs()
 initGlobalLogger()
+initGlobalStore()
 
 logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} ${os.platform()}-----\n`)
 
@@ -186,7 +189,10 @@ function createWindow (autoLogin) {
 
   mainWindow.loadURL(`file://${__dirname}/index.html`)
   setUpApplicationMenu()
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
+
+
+  remoteMain.enable(mainWindow.webContents)
 
   global.mainWindow = mainWindow
 }
@@ -358,6 +364,11 @@ function initGlobalConfigs () {
   nconf.defaults(defaultConfig)
   global.conf = nconf
   global.configFilePath = configFilePath
+}
+
+function initGlobalStore() {
+  logger.info(`[store] Initializing store`)
+  global.store = new Store({watch: true});
 }
 
 function initGlobalLogger () {

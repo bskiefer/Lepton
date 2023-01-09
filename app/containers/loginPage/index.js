@@ -14,9 +14,12 @@ import './index.scss'
 import {
   updateUserAccount
 } from '../../actions/index'
+import AddAccountModal from '../addAccountModal'
 
+const store = remote.getGlobal('store')
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
+
 
 const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
 
@@ -25,18 +28,23 @@ class LoginPage extends Component {
     super(props)
     this.state = {
       inputTokenValue: '',
-      loginMode: LoginModeEnum.CREDENTIALS
+      loginMode: LoginModeEnum.CREDENTIALS,
+      accounts: store.get('accounts') || {}
     }
+
+    store.onDidChange('accounts', () => {
+      this.refreshAccounts()
+    });
   }
 
   componentWillMount () {
-    const { loggedInUserInfo } = this.props
-    logger.debug('-----> Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
+    const { userAccount } = this.props
+    logger.debug('-----> Inside LoginPage componentWillMount with userAccount' + JSON.stringify(userAccount))
 
     logger.debug('-----> Registering listener for auto-login signal')
     ipcRenderer.on('auto-login', () => {
-      logger.debug('-----> Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
-      loggedInUserInfo && loggedInUserInfo.token && this.handleContinueButtonClicked(loggedInUserInfo.token)
+      logger.debug('-----> Received "auto-login" signal with userAccount ' + JSON.stringify(userAccount))
+      userAccount && userAccount.token && this.handleContinueButtonClicked(userAccount.token)
     })
 
     logger.debug('-----> sending login-page-ready signal')
@@ -77,9 +85,9 @@ class LoginPage extends Component {
   }
 
   renderControlSection () {
-    const { authWindowStatus, loggedInUserInfo, userSessionStatus, userAccount } = this.props
+    const { authWindowStatus, userAccount, userSessionStatus } = this.props
     const { loginMode } = this.state
-    const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
+    const loggedInUserName = userAccount ? userAccount.profile : null
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
@@ -128,31 +136,19 @@ class LoginPage extends Component {
   }
 
   handleLoginAuthWindow(account) {
-    const { updateUserAccount } = this.props
+    this.props.setActiveAccount(account)
+  }
 
-    updateUserAccount({
-      "name": account,
-      "host": conf.get(`accounts:${account}:host`),
-      "enterprise": conf.get(`accounts:${account}:enterprise`),
-      "token": conf.get(`accounts:${account}:token`)
-    })
-
-    console.log(this.props.userAccount)
-
-    this.setState({
-      inputTokenValue: conf.get(`accounts:${account}:token`)
-    })
-    this.props.initUserSession(conf.get(`accounts:${account}:token`))
+  refreshAccounts() {
+    this.setState({accounts: store.get('accounts')})
   }
 
   renderCredentialLoginSection(authWindowStatus, userSessionStatus) {
-    
-    const accounts = conf.get('accounts');
-    const loginAuthWindow = this.handleLoginAuthWindow.bind(this);
+    const loginAuthWindow = this.handleLoginAuthWindow.bind(this)
 
     return (
       <div>
-        {Object.keys(accounts).map((i, index) => {
+        {Object.keys(this.state.accounts).map((i, index) => {
           return <div key={index}>
             <Button
               className='modal-button'
@@ -161,6 +157,8 @@ class LoginPage extends Component {
               </Button>
             </div>
         })}
+        <AddAccountModal />
+        
       </div>
     )
   }
